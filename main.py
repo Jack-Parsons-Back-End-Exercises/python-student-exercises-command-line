@@ -45,3 +45,6 @@ for student in c37.students:
 for student in e9.students:
     andy.assignExercise(student, celeb_tribute)
     andy.assignExercise(student, chicken_monkey)
+
+for exercise in jack_parsons.exercises:
+    print(exercise.name)
