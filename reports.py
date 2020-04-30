@@ -1,35 +1,8 @@
 import sqlite3
-
-class Student():
-
-    def __init__(self, id, first, last, handle, cohort):
-        self.id = id
-        self.first_name = first
-        self.last_name = last
-        self.slack_handle = handle
-        self.cohort = cohort
-
-    def __repr__(self):
-        return f'{self.first_name} {self.last_name} is in {self.cohort}'
-
-class Cohort():
-
-    def __init__(self, id, name):
-        self.id = id
-        self.name = name
-
-    def __repr__(self):
-        return self.name
-
-class Exercise():
-
-    def __init__(self, id, name, language):
-        self.id = id
-        self.name = name
-        self.language = language
-
-    def __repr__(self):
-        return f'{self.name} ({self.language})'
+from student import Student
+from cohort import Cohort
+from exercise import Exercise
+from instructor import Instructor
 
 class StudentExerciseReports():
 
@@ -105,5 +78,94 @@ class StudentExerciseReports():
 
             [print(exercise) for exercise in all_exercises]
 
+    def javascript_exercises(self):
+
+        """Retrieves just the JavaScript exercises"""
+
+        with sqlite3.connect(self.db_path) as conn:
+            conn.row_factory = lambda cursor, row: Exercise(
+                row[0], row[1], row[2]
+            )
+            db_cursor = conn.cursor()
+
+            db_cursor.execute("""
+            SELECT e.exerciseId,
+                e.ExerciseName,
+                e.ExerciseLanguage
+            FROM Exercise e
+            WHERE e.ExerciseLanguage = 'JavaScript'""")
+
+            js_exercises = db_cursor.fetchall()
+
+            [print(exercise) for exercise in js_exercises]
+
+    def python_exercises(self):
+
+        """Retrieves just the Python exercises"""
+
+        with sqlite3.connect(self.db_path) as conn:
+            conn.row_factory = lambda cursor, row: Exercise(
+                row[0], row[1], row[2]
+            )
+            db_cursor = conn.cursor()
+
+            db_cursor.execute("""
+            SELECT e.exerciseId,
+                e.ExerciseName,
+                e.ExerciseLanguage
+            FROM Exercise e
+            WHERE e.ExerciseLanguage = 'Python'""")
+
+            python_exercises = db_cursor.fetchall()
+
+            [print(exercise) for exercise in python_exercises]
+
+    def csharp_exercises(self):
+
+        """Retrieves just the C# exercises"""
+
+        with sqlite3.connect(self.db_path) as conn:
+            conn.row_factory = lambda cursor, row: Exercise(
+                row[0], row[1], row[2]
+            )
+            db_cursor = conn.cursor()
+
+            db_cursor.execute("""
+            SELECT e.exerciseId,
+                e.ExerciseName,
+                e.ExerciseLanguage
+            FROM Exercise e
+            WHERE e.ExerciseLanguage = 'CSharp'""")
+
+            csharp_exercises = db_cursor.fetchall()
+
+            [print(exercise) for exercise in csharp_exercises]
+
+    def all_instructors(self):
+
+        """Retrieves all of the instructors"""
+
+        with sqlite3.connect(self.db_path) as conn:
+            conn.row_factory = lambda cursor, row: Instructor(
+                row[0], row[1], row[2], row[4], row[5], row[6]
+            )
+            db_cursor = conn.cursor()
+
+            db_cursor.execute("""
+            SELECT i.InstructorId,
+                i.FirstName,
+                i.LastName,
+                i.SlackHandle,
+                i.CohortId,
+                c.CohortName,
+                i.InstructorSpecialty
+            FROM Instructor i
+            JOIN Cohort c on i.CohortId = c.CohortId
+            ORDER BY i.CohortId""")
+
+            all_instructors = db_cursor.fetchall()
+
+            [print(instructor) for instructor in all_instructors]
+
 reports = StudentExerciseReports()
-reports.all_exercises()
+reports.all_instructors()
