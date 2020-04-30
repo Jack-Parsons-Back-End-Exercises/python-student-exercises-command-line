@@ -168,4 +168,4 @@ class StudentExerciseReports():
             [print(instructor) for instructor in all_instructors]
 
 reports = StudentExerciseReports()
-reports.all_instructors()
+reports.all_students()
