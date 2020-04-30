@@ -1,4 +1,4 @@
-from person import NSSPerson
+from .person import NSSPerson
 
 class Instructor(NSSPerson):
 

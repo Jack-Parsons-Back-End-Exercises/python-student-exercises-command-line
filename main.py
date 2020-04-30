@@ -1,4 +1,4 @@
-from reports import StudentExerciseReports
+from classes import StudentExerciseReports
 
 reports = StudentExerciseReports()
-reports.all_students()
+reports.csharp_exercises()
