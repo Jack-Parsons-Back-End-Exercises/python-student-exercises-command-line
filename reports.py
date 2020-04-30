@@ -166,6 +166,3 @@ class StudentExerciseReports():
             all_instructors = db_cursor.fetchall()
 
             [print(instructor) for instructor in all_instructors]
-
-reports = StudentExerciseReports()
-reports.all_students()
