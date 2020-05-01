@@ -238,3 +238,39 @@ class StudentExerciseReports():
                 print(f'{student_name} is working on:')
                 for exercise in exercises:
                     print(f'\t* {exercise}')
+
+    def exercises_assigned_instructors(self):
+
+        instructors = dict()
+
+        with sqlite3.connect(self.db_path) as conn:
+            db_cursor = conn.cursor()
+
+            db_cursor.execute("""
+            SELECT i.InstructorId,
+	            i.FirstName,
+	            i.LastName,
+	            e.ExerciseId,
+	            e.ExerciseName
+            FROM Instructor i
+	        JOIN AssignedExercise ae ON ae.InstructorId = i.InstructorId
+	        JOIN Exercise e ON ae.ExerciseId = e.ExerciseId""")
+
+            data = db_cursor.fetchall()
+
+            for row in data:
+                instructor_id = row[0]
+                instructor_name = f'{row[1]} {row[2]}'
+                exercise_id = row[3]
+                exercise_name = row[4]
+
+                if instructor_name not in instructors:
+                    instructors[instructor_name] = [exercise_name]
+                else:
+                    if exercise_name not in instructors[instructor_name]:
+                        instructors[instructor_name].append(exercise_name)
+
+            for instructor_name, exercises in instructors.items():
+                print(f'{instructor_name} has assigned:')
+                for exercise in exercises:
+                        print(f'\t* {exercise}')
