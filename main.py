@@ -1,4 +1,4 @@
 from classes import StudentExerciseReports
 
 reports = StudentExerciseReports()
-reports.exercises_assigned_instructors()
+reports.exercises_with_students()

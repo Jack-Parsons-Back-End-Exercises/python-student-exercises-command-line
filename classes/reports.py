@@ -200,7 +200,7 @@ class StudentExerciseReports():
                     exercises[exercise_name].append(student_name)
 
             for exercise_name, students in exercises.items():
-                print(exercise_name)
+                print(f'{exercise_name} is being worked on by:')
                 for student in students:
                     print(f'\t* {student}')
 
