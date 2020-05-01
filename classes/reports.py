@@ -165,4 +165,76 @@ class StudentExerciseReports():
 
             all_instructors = db_cursor.fetchall()
 
-            [print(instructor) for instructor in all_instructors]
+            [print(instructor) for instructor in all_instructors],
+    
+    def exercises_with_students(self):
+
+        exercises = dict()
+
+        with sqlite3.connect(self.db_path) as conn:
+            db_cursor = conn.cursor()
+
+            db_cursor.execute("""
+            SELECT e.ExerciseId,
+	            e.ExerciseName,
+	            s.StudentId,
+	            s.FirstName,
+            	s.LastName
+            FROM Exercise e
+            JOIN AssignedExercise ae on ae.ExerciseId = e.ExerciseId
+            JOIN Student s on s.StudentId = ae.StudentId""")
+
+            dataset = db_cursor.fetchall()
+
+            for row in dataset:
+                exercise_id = row[0]
+                exercise_name = row[1]
+                student_id = row[2]
+                student_name = f'{row[3]} {row[4]}'
+
+                
+
+                if exercise_name not in exercises:
+                    exercises[exercise_name] = [student_name]
+                else:
+                    exercises[exercise_name].append(student_name)
+
+            for exercise_name, students in exercises.items():
+                print(exercise_name)
+                for student in students:
+                    print(f'\t* {student}')
+
+    def students_with_exercises(self):
+
+        students = dict()
+
+        with sqlite3.connect(self.db_path) as conn:
+            db_cursor = conn.cursor()
+
+            db_cursor.execute("""
+            SELECT s.StudentId,
+	            s.FirstName,
+	            s.LastName,
+	            e.ExerciseId,
+	            e.ExerciseName
+            FROM Student s
+	        JOIN AssignedExercise ae ON ae.StudentId = s.StudentId
+	        JOIN Exercise e ON ae.ExerciseId = e.ExerciseId""")
+
+            data = db_cursor.fetchall()
+
+            for row in data:
+                student_id = row[0]
+                student_name = f'{row[1]} {row[2]}'
+                exercise_id = row[3]
+                exercise_name = row[4]
+
+                if student_name not in students:
+                    students[student_name] = [exercise_name]
+                else:
+                    students[student_name].append(exercise_name)
+
+            for student_name, exercises in students.items():
+                print(f'{student_name} is working on:')
+                for exercise in exercises:
+                    print(f'\t* {exercise}')
